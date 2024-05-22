@@ -56,9 +56,17 @@ pipeline {
         }
         stage('Deploy to Kubernetes') {
             steps {
-                script {
-                    withKubeConfig([credentialsId: 'k8s-jenkins-token', serverUrl: 'https://10.0.0.3', namespace: 'default']) {
-                        sh 'kubectl apply -f travellog/deploy.yaml'
+                dir('cicd') {
+                    script {
+                        withKubeConfig([credentialsId: 'k8s-jenkins-token', serverUrl: 'https://10.0.0.3', namespace: 'frontend-ns']) {
+                            sh '''
+                            if kubectl get deployment frontend-app -n frontend-ns; then
+                                kubectl set image deployment/frontend-app frontend=${DOCKER_IMAGE}:${BUILD_ID} -n frontend-ns --record
+                            else
+                                kubectl apply -f frontend-deploy.yaml
+                            fi
+                            '''
+                        }
                     }
                 }
             }
