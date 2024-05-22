@@ -2,16 +2,82 @@ pipeline {
     agent any
 
     tools {
-       nodejs 'nodejs-21.6.2'
+        nodejs 'nodejs-21.6.2'
     }
 
     environment {
         DOCKER_TOOL_NAME = 'docker-26.0.0'
-        DOCKER_IMAGE = 'asia-northeast3-docker.pkg.dev/bubbly-enigma-423300-m7/gar-io/travellog-frontend'
+        FRONTEND_IMAGE = 'asia-northeast3-docker.pkg.dev/bubbly-enigma-423300-m7/gar-io/travellog-frontend'
+        BACKEND_IMAGE = 'asia-northeast3-docker.pkg.dev/bubbly-enigma-423300-m7/gar-io/travellog-backend'
         SKIP_PREFLIGHT_CHECK = 'true'
     }
 
     stages {
+        stage('Backend Build') {
+            steps {
+                dir('backend') {
+                    script {
+                        echo 'Backend Building......'
+                        sh 'pip install -r requirements.txt'
+                    }
+                }
+            }
+        }
+        stage('Backend Test') {
+            steps {
+                dir('backend/back_jango') {
+                    script {
+                        echo 'Backend Testing...'
+                        sh 'python manage.py test'
+                    }
+                }
+            }
+        }
+        stage('Build Backend Docker Image') {
+            steps {
+                dir('backend') {
+                    script {
+                        docker.build("${BACKEND_IMAGE}:${env.BUILD_ID}", '--no-cache .')
+                        sh "docker tag ${BACKEND_IMAGE}:${env.BUILD_ID} ${BACKEND_IMAGE}:latest"
+                    }
+                }
+            }
+        }
+        stage('Push Backend Docker Image') {
+            steps {
+                script {
+                    withCredentials([file(credentialsId: 'gcp-jenkins-gar-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                        sh '''#!/bin/bash
+                        gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
+                        gcloud auth configure-docker asia-northeast3-docker.pkg.dev --quiet
+                        docker push ${BACKEND_IMAGE}:${BUILD_ID}
+                        docker push ${BACKEND_IMAGE}:latest
+                        '''
+                    }
+                }
+            }
+        }
+        stage('Deploy Backend to Kubernetes') {
+            steps {
+                dir('cicd') {
+                    script {
+                        withKubeConfig([credentialsId: 'k8s-jenkins-token', serverUrl: 'https://10.0.0.3', namespace: 'backend-ns']) {
+                            sh '''
+                            if kubectl get deployment django-deployment -n backend-ns; then
+                                kubectl set image deployment/django-deployment backend=${BACKEND_IMAGE}:${BUILD_ID} -n backend-ns --record
+                            else
+                                kubectl apply -f service.yaml
+                                kubectl apply -f backend-config.yaml
+                                kubectl apply -f backend-secret.yaml
+                                kubectl apply -f backend-deploy.yaml
+                                kubectl apply -f backend-svc-proxy.yaml
+                            fi
+                            '''
+                        }
+                    }
+                }
+            }
+        }
         stage('Frontend Build') {
             steps {
                 dir('frontend') {
@@ -36,8 +102,8 @@ pipeline {
             steps {
                 dir('frontend') {
                     script {
-                        docker.build("${DOCKER_IMAGE}:${env.BUILD_ID}", '--no-cache .')
-                        sh "docker tag ${DOCKER_IMAGE}:${env.BUILD_ID} ${DOCKER_IMAGE}:latest"
+                        docker.build("${FRONTEND_IMAGE}:${env.BUILD_ID}", '--no-cache .')
+                        sh "docker tag ${FRONTEND_IMAGE}:${env.BUILD_ID} ${FRONTEND_IMAGE}:latest"
                     }
                 }
             }
@@ -49,21 +115,21 @@ pipeline {
                         sh '''#!/bin/bash
                         gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
                         gcloud auth configure-docker asia-northeast3-docker.pkg.dev --quiet
-                        docker push ${DOCKER_IMAGE}:${BUILD_ID}
-                        docker push ${DOCKER_IMAGE}:latest
+                        docker push ${FRONTEND_IMAGE}:${BUILD_ID}
+                        docker push ${FRONTEND_IMAGE}:latest
                         '''
                     }
                 }
             }
         }
-        stage('Deploy to Kubernetes') {
+        stage('Deploy Frontend to Kubernetes') {
             steps {
                 dir('cicd') {
                     script {
                         withKubeConfig([credentialsId: 'k8s-jenkins-token', serverUrl: 'https://10.0.0.3', namespace: 'frontend-ns']) {
                             sh '''
                             if kubectl get deployment frontend-app -n frontend-ns; then
-                                kubectl set image deployment/frontend-app frontend=${DOCKER_IMAGE}:${BUILD_ID} -n frontend-ns --record
+                                kubectl set image deployment/frontend-app frontend=${FRONTEND_IMAGE}:${BUILD_ID} -n frontend-ns --record
                             else
                                 kubectl apply -f frontend-deploy.yaml
                             fi
