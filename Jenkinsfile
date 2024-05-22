@@ -67,6 +67,7 @@ pipeline {
                                 kubectl apply -f backend-secret.yaml
                                 kubectl apply -f backend-deploy.yaml
                                 kubectl apply -f backend-svc-proxy.yaml
+                                kubectl apply -f TravelLog-Ingress.yaml
                             fi
                             '''
                         }
