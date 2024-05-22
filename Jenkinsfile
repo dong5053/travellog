@@ -36,7 +36,7 @@ pipeline {
             steps {
                 dir('frontend') {
                     script {
-                        docker.build("${DOCKER_IMAGE}:${env.BUILD_ID}")
+                        docker.build("${DOCKER_IMAGE}:${env.BUILD_ID}", '--no-cache .')
                     }
                 }
             }
