@@ -13,22 +13,18 @@ pipeline {
     }
 
     stages {
-        stage('Backend Build') {
+        stage('Backend Build and Test') {
             steps {
                 dir('backend') {
                     script {
-                        echo 'Backend Building......'
-                        sh 'pip install -r requirements.txt'
-                    }
-                }
-            }
-        }
-        stage('Backend Test') {
-            steps {
-                dir('backend/back_jango') {
-                    script {
-                        echo 'Backend Testing...'
-                        sh 'python manage.py test'
+                        echo 'Backend Building and Testing......'
+                        // Use Docker to build and test the backend
+                        docker.image('python:3.8').inside {
+                            sh '''
+                            pip install -r requirements.txt
+                            python manage.py test
+                            '''
+                        }
                     }
                 }
             }
