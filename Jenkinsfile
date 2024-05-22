@@ -8,6 +8,7 @@ pipeline {
     environment {
         DOCKER_TOOL_NAME = 'docker-26.0.0'
         DOCKER_IMAGE = 'asia-northeast3-docker.pkg.dev/bubbly-enigma-423300-m7/gar-io/travellog'
+        SKIP_PREFLIGHT_CHECK = 'true'
     }
 
     stages {
