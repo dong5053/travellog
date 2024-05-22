@@ -6,7 +6,7 @@ metadata:
 data:
   DJANGO_DB_NAME: "travel_log"
   DJANGO_DB_USER: "travel_admin"
-  DJANGO_DB_HOST: "34.64.201.194"
+  DJANGO_DB_HOST: "10.0.0.7"
   DJANGO_DB_PORT: "3306"
 
 ---
