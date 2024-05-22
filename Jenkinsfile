@@ -37,6 +37,7 @@ pipeline {
                 dir('frontend') {
                     script {
                         docker.build("${DOCKER_IMAGE}:${env.BUILD_ID}", '--no-cache .')
+                        sh "docker tag ${DOCKER_IMAGE}:${env.BUILD_ID} ${DOCKER_IMAGE}:latest"
                     }
                 }
             }
@@ -49,6 +50,7 @@ pipeline {
                         gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
                         gcloud auth configure-docker asia-northeast3-docker.pkg.dev --quiet
                         docker push ${DOCKER_IMAGE}:${BUILD_ID}
+                        docker push ${DOCKER_IMAGE}:latest
                         '''
                     }
                 }
