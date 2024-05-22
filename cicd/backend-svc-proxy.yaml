@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-svc-proxy
+  namespace: frontend-ns
+spec:
+  type: ExternalName
+  externalName: backend-svc.backend-ns.svc.cluster.local
+  ports:
+    - port: 8000

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: django-config
+  namespace: backend-ns
+data:
+  DJANGO_DB_NAME: "travel_log"
+  DJANGO_DB_USER: "travel_admin"
+  DJANGO_DB_HOST: "34.64.201.194"
+  DJANGO_DB_PORT: "3306"
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: react-config
+  namespace: frontend-ns
+data:
+  REACT_APP_API_BASE_URL: "https://backend.travellog.io"

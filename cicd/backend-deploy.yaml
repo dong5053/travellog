@@ -1,0 +1,54 @@
+# Django Backend DeploymentapiVersion: apps/v1
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django-deployment
+  namespace: backend-ns
+  labels:
+    app: back
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: back
+  template:
+    metadata:
+      labels:
+        app: back
+    spec:
+      containers:
+      - name: django-backend
+        image: seonxx/django-container:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DJANGO_DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: django-config
+              key: DJANGO_DB_NAME
+        - name: DJANGO_DB_USER
+          valueFrom:
+            configMapKeyRef:
+              name: django-config
+              key: DJANGO_DB_USER
+        - name: DJANGO_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: django-secret
+              key: DJANGO_DB_PASSWORD
+        - name: DJANGO_DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: django-config
+              key: DJANGO_DB_HOST
+        - name: DJANGO_DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: django-config
+              key: DJANGO_DB_PORT
+        - name: DJANGO_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: django-secret
+              key: DJANGO_SECRET_KEY
