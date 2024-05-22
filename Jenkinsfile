@@ -7,41 +7,41 @@ pipeline {
 
     environment {
         DOCKER_TOOL_NAME = 'docker-26.0.0'
-        DOCKER_IMAGE = 'asia-northeast3-docker.pkg.dev/bubbly-enigma-423300-m7/gar-io/travellog'
+        DOCKER_IMAGE = 'asia-northeast3-docker.pkg.dev/bubbly-enigma-423300-m7/gar-io/travellog-frontend'
         SKIP_PREFLIGHT_CHECK = 'true'
     }
 
     stages {
-        stage('Build') {
+        stage('Frontend Build') {
             steps {
                 dir('frontend') {
                     script {
-                        echo 'Building......'
+                        echo 'Frontend Building......'
                         sh 'npm install'
                     }
                 }
             }
         }
-        stage('Test') {
+        stage('Frontend Test') {
             steps {
                 dir('frontend') {
                     script {
-                        echo 'Testing...'
+                        echo 'Frontend Testing...'
                         sh 'npm test'
                     }
                 }
             }
         }
-        stage('Build Docker Image') {
+        stage('Build Frontend Docker Image') {
             steps {
-                dir('travellog') {
+                dir('frontend') {
                     script {
                         docker.build("${DOCKER_IMAGE}:${env.BUILD_ID}")
                     }
                 }
             }
         }
-        stage('Push Docker Image') {
+        stage('Push Frontend Docker Image') {
             steps {
                 script {
                     withCredentials([file(credentialsId: 'gcp-jenkins-gar-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
