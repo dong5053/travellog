@@ -23,7 +23,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                dir('travellog/frontend') {
+                dir('frontend') {
                     script {
                         echo 'Testing...'
                         sh 'npm test'
