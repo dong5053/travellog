@@ -62,6 +62,7 @@ pipeline {
                             if kubectl get deployment django-deployment -n backend-ns; then
                                 kubectl set image deployment/django-deployment backend=${BACKEND_IMAGE}:${BUILD_ID} -n backend-ns --record
                             else
+                                kubectl apply -f 1-TravelLog-Namespace.yaml
                                 kubectl apply -f service.yaml
                                 kubectl apply -f backend-config.yaml
                                 kubectl apply -f backend-secret.yaml
