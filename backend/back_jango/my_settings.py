@@ -5,8 +5,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.environ.get('DJANGO_DB_NAME', 'travel_log'),
         'USER': os.environ.get('DJANGO_DB_USER', 'travel_admin'),
-        'PASSWORD': os.environ.get('DJANGO_DB_PASSWORD', 'k8spass#'),
-        'HOST': os.environ.get('DJANGO_DB_HOST', 'travel.db.com'),
+        'PASSWORD': os.environ.get('DJANGO_DB_PASSWORD', 'sixtravel!0505#'),
+        'HOST': os.environ.get('DJANGO_DB_HOST', '10.0.0.7'),
         'PORT': os.environ.get('DJANGO_DB_PORT', '3306'),
     }
 }
