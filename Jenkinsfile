@@ -22,7 +22,7 @@ pipeline {
                         docker.image('python:3.8').inside('-u root:root') {
                             sh '''
                             pip install --user -r requirements.txt
-                            python manage.py test
+                            python back_jango/manage.py test
                             '''
                         }
                     }
