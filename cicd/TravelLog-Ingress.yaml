@@ -4,9 +4,9 @@ metadata:
   name: frontend-ingress
   namespace: frontend-ns
 spec:
+  ingressClassName: nginx
   rules:
-    - host: frontend.travellog.io
-      http:
+    - http:
         paths:
           - path: /
             pathType: Prefix
@@ -15,8 +15,7 @@ spec:
                 name: frontend-svc
                 port:
                   number: 3000
-    - host: backend.travellog.io
-      http:
+    - http:
         paths:
           - path: /travel
             pathType: Prefix
