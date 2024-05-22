@@ -19,9 +19,9 @@ pipeline {
                     script {
                         echo 'Backend Building and Testing......'
                         // Use Docker to build and test the backend
-                        docker.image('python:3.8').inside {
+                        docker.image('python:3.8').inside('-u root:root') {
                             sh '''
-                            pip install -r requirements.txt
+                            pip install --user -r requirements.txt
                             python manage.py test
                             '''
                         }
