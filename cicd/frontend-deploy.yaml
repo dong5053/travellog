@@ -17,6 +17,6 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: shinkiho/travel-log-front:1.0
+          image: asia-northeast3-docker.pkg.dev/bubbly-enigma-423300-m7/gar-io/travellog-frontend:latest
           ports:
             - containerPort: 3000
