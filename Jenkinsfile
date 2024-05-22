@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                dir('travellog/frontend') {
+                dir('frontend') {
                     script {
                         echo 'Building......'
                         sh 'npm install'
