@@ -7,7 +7,6 @@ function Login({ onLogin }) {
   const [name, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
-  const [welcomeMessage, setWelcomeMessage] = useState(''); // Welcome 메시지 상태 추가
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -22,7 +21,6 @@ function Login({ onLogin }) {
       localStorage.setItem('expiration', expirationTime.toString());
       alert('로그인 성공!');
       onLogin(response.data.user.name); // App 컴포넌트의 로그인 상태 업데이트 함수 호출
-      setWelcomeMessage(`환영합니다, ${name}`); // Welcome 메시지 설정
     } catch (error) {
       if (error.response && error.response.status === 404) {
         setLoginError('사용자를 찾을 수 없습니다.');
@@ -67,8 +65,6 @@ function Login({ onLogin }) {
         </form>
         <img src={travelLogLogo} alt="TravelLog Logo" className="login-logo"/>
       </div>
-      {/* XSS 취약점 예제 */}
-      <div dangerouslySetInnerHTML={{ __html: welcomeMessage }}></div>
     </div>
   );
 }
