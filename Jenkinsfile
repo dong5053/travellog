@@ -69,6 +69,7 @@ pipeline {
                                 kubectl apply -f backend-deploy.yaml
                                 kubectl apply -f backend-svc-proxy.yaml
                                 kubectl apply -f TravelLog-Ingress.yaml
+                                kubectl apply -f clusterissuer.yaml
                             fi
                             '''
                         }
