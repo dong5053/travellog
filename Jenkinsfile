@@ -138,4 +138,15 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+            script {
+                echo 'Cleaning up unused Docker images...'
+                sh '''
+                docker image prune -af
+                docker rmi $(docker images -q)
+                '''
+            }
+        }
+    }
 }
