@@ -3,10 +3,17 @@ kind: Ingress
 metadata:
   name: frontend-ingress
   namespace: frontend-ns
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - travellog.io.com
+      secretName: travellog-tls
   rules:
-    - http:
+    - host: travellog.io.com
+      http:
         paths:
           - path: /
             pathType: Prefix
@@ -15,8 +22,6 @@ spec:
                 name: frontend-svc
                 port:
                   number: 3000
-    - http:
-        paths:
           - path: /travel
             pathType: Prefix
             backend:
