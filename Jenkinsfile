@@ -151,7 +151,6 @@ pipeline {
                 docker.image('alpine').inside('-u root:root') {
                     sh '''
                     rm -rf /var/lib/jenkins/workspace/*
-                    rm -rf /var/lib/jenkins/plugins/*
                     '''
                 }
             }
