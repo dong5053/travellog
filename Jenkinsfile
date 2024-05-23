@@ -17,7 +17,7 @@ pipeline {
             steps {
                 dir('backend') {
                     script {
-                        echo 'Backend Building and Testing......'
+                        echo 'Backend Building and Testing...'
                         // Use Docker to build and test the backend
                         docker.image('python:3.8').inside('-u root:root') {
                             sh '''
