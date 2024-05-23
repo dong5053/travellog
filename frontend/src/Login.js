@@ -35,7 +35,7 @@ function Login({ onLogin }) {
   return (
     <div className="login-page">
       <div className="login-container">
-        <form onSubmit={handleLogin} className="login-form" autocomplete="off">
+        <form onSubmit={handleLogin} className="login-form">
           <div className="login-input-group">
             <label htmlFor="name" className="input-label">ID</label>
             <input
@@ -46,7 +46,6 @@ function Login({ onLogin }) {
               onChange={e => setUsername(e.target.value)}
               className="login-input-field"
               required
-              autocomplete="off"
             />
           </div>
           <div className="login-input-group">
@@ -59,7 +58,6 @@ function Login({ onLogin }) {
               onChange={e => setPassword(e.target.value)}
               className="login-input-field"
               required
-              autocomplete="off"
             />
           </div>
           {loginError && <p className="login-error">{loginError}</p>}
