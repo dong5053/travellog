@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './App.css';
-import travelLogLogo from './assets/TravelLog_with_k8s.png'; // 이미지 경로 확인
+import travelLogLogo from './assets/TravelLog_with_k8s_v2.webp'; // 이미지 경로 확인
 
 function Login({ onLogin }) {
   const [name, setUsername] = useState('');
