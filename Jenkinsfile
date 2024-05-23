@@ -147,12 +147,6 @@ pipeline {
                 docker image prune -af
                 docker rmi $(docker images -q)
                 '''
-                echo 'Cleaning up Jenkins workspace and plugins...'
-                docker.image('alpine').inside('-u root:root') {
-                    sh '''
-                    rm -rf /var/lib/jenkins/workspace/*
-                    '''
-                }
             }
         }
     }
