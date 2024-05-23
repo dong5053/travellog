@@ -59,10 +59,14 @@ pipeline {
                     script {
                         withKubeConfig([credentialsId: 'k8s-jenkins-token', serverUrl: 'https://10.0.0.3', namespace: 'backend-ns']) {
                             sh '''
+                            if kubectl get namespace backend-ns; then
+                                echo "Namespace backend-ns already exists"
+                            else
+                                kubectl apply -f 1-TravelLog-Namespace.yaml
+                            fi
                             if kubectl get deployment django-deployment -n backend-ns; then
                                 kubectl set image deployment/django-deployment django-backend=${BACKEND_IMAGE}:${BUILD_ID} -n backend-ns --record
                             else
-                                kubectl apply -f 1-TravelLog-Namespace.yaml
                                 kubectl apply -f service.yaml
                                 kubectl apply -f backend-config.yaml
                                 kubectl apply -f backend-secret.yaml
