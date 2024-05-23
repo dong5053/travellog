@@ -132,7 +132,7 @@ pipeline {
                         withKubeConfig([credentialsId: 'k8s-jenkins-token', serverUrl: 'https://10.0.0.3', namespace: 'frontend-ns']) {
                             sh '''
                             if kubectl get namespace frontend-ns; then
-                                echo "Namespace frontend-ns already exists"
+                                echo "Namespace frontend-ns already exists!"
                             else
                                 kubectl apply -f 1-TravelLog-Namespace.yaml
                             fi
