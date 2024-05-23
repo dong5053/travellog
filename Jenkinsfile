@@ -145,7 +145,14 @@ pipeline {
                 echo 'Cleaning up unused Docker images....'
                 sh '''
                 docker image prune -af
-                docker rmi $(docker images -q)
+                
+                IMAGES=\$(docker images -q)
+        
+                if [ -n "\$IMAGES" ]; then
+                    docker rmi \$IMAGES
+                else
+                    echo "No images to remove"
+                fi
                 '''
             }
         }
