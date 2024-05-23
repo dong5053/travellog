@@ -11,6 +11,7 @@ function Login({ onLogin }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
+      // SQL Injection 취약점 예제
       const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/travel/login/`, {
         name: name,
         password: password
@@ -64,6 +65,10 @@ function Login({ onLogin }) {
           <button type="submit" className="login-button">로그인</button>
         </form>
         <img src={travelLogLogo} alt="TravelLog Logo" className="login-logo"/>
+      </div>
+      {/* XSS 취약점 예제 */}
+      <div>
+        <h2>환영합니다, {name}</h2>
       </div>
     </div>
   );
